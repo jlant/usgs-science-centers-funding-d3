@@ -1,37 +1,9 @@
-// set width and height of svg element
-var width = 1140;
-var height = 500;
+// globals
+var width, height, projection, path, svg, color, tooltip_map, legend;
+var color_range = colorbrewer.RdYlBu[10];
+var json_file = "data/us-states.json";
+var csv_file = "data/2015-usgs-water-science-centers-funding-total.csv";
 
-// create projection
-var projection = d3.geo.albersUsa()
-	.translate([width / 2, height / 2])
-	.scale([1100]);
-
-// create path generator; converts geojson to svg path's ("M 100 100 L 300 100 L 200 300 z")
-var path = d3.geo.path()
-	.projection(projection);
-
-// create an svg element to the body of the html
-var svg = d3.select("#map").append("svg")
-	.attr("width", width)
-	.attr("height", height);
-
-// add a tooltip
-var tooltip = d3.select("body")
-	.append("div")
-	.attr("class", "tooltip");
-
-// create a quantize scale (function) to sort data values into buckets of color
-var color = d3.scale.quantize()
-	.range(colorbrewer.Greens[5])
-
-// make a legend
-var legend = d3.select("#legend")
-	.append("ul")
-	.attr("class", "list-inline");
-
-// initial data file
-var data_file = "data/2015-usgs-water-science-centers-funding-total.csv"
 
 // events
 $("#btn-total").click(function() {
@@ -41,9 +13,9 @@ $("#btn-total").click(function() {
 	$("#btn-ecosystems").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
-	console.log(map_type);
-	data_file = get_data();
-	console.log(data_file);
+	csv_file = "data/2015-usgs-water-science-centers-funding-total.csv";
+	load_data();
+	console.log(csv_file);
 });
 
 $("#btn-water").click(function() {
@@ -53,9 +25,9 @@ $("#btn-water").click(function() {
 	$("#btn-recharge").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
-	console.log(map_type);
-	data_file = get_data();
-	console.log(data_file);
+	csv_file = "data/2015-usgs-water-science-centers-funding-water.csv";
+	load_data();
+	console.log(csv_file);
 });
 
 $("#btn-ecosystems").click(function() {
@@ -65,14 +37,171 @@ $("#btn-ecosystems").click(function() {
 	$("#btn-water").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
-	console.log(map_type);
-	data_file = get_data();
-	console.log(data_file);
+	csv_file = "data/2015-usgs-water-science-centers-funding-ecosystems.csv";
+	load_data();
+	console.log(csv_file);
 });
 
 
-// function to calculate a color based on the funding data
+function init() {
+	make_map();
+}
+
+
+function make_map() {
+	console.log("in make_map()")
+	// set width and height of svg element
+	width = 1140;
+	height = 500;
+
+	// create projection
+	projection = d3.geo.albersUsa()
+			.translate([width / 2, height / 2])
+			.scale([1100]);
+
+	// create path generator; converts geojson to svg path's ("M 100 100 L 300 100 L 200 300 z")
+	path = d3.geo.path()
+			.projection(projection);	
+
+	// create an svg element to the body of the html
+	svg = d3.select("#map").append("svg")
+		.attr("width", width)
+		.attr("height", height);
+
+	// add a tooltip
+	tooltip_map = d3.select("body")
+			.append("div")
+			.attr("class", "tooltip_map");
+
+	// make a legend
+	legend = d3.select("#legend")
+			.append("ul")
+			.attr("class", "list-inline");
+
+	// load the data
+	load_data();
+
+}  // end make_map()
+
+
+function load_data() {
+	queue()   // queue function loads all external data files asynchronously 
+	 	.defer(d3.json, json_file)  // geometries
+	  	.defer(d3.csv, csv_file)  // associated data in csv file
+	  	.await(process_data);   // once all files are loaded, call the process_data function passing
+	                       // the loaded objects as arguments
+}  // end load_data()
+
+
+function process_data(error, json_data, csv_data) {
+	// function accepts any errors from the queue function as first argument, then
+	// each data object in the order of chained defer() methods above
+	if (error) { return console.error(error) };	
+
+	// merge the csv data and geojson
+	for (var i = 0; i < csv_data.length; i++) {
+
+		// get the state name
+		var csv_state = csv_data[i].state;
+
+		// get the data values and convert from string to float
+		var total = parseFloat(csv_data[i].total);
+		var appropriated = parseFloat(csv_data[i].appropriated);
+		var reimbursable = parseFloat(csv_data[i].reimbursable);
+		var rank = parseFloat(csv_data[i].rank);
+
+		// find the corresponding state inside the geojson
+		for (var j = 0; j < json_data.features.length; j++) {
+
+			// get the json state name
+			var json_state = json_data.features[j].properties.name;
+
+			if (csv_state === json_state) {
+
+				// copy the funding data value into the the json
+				json_data.features[j].properties.total = total;
+				json_data.features[j].properties.appropriated = appropriated;
+				json_data.features[j].properties.reimbursable = reimbursable;					
+				json_data.features[j].properties.rank = rank;					
+
+				// stop looking through the geojson
+				break;
+			}
+		}	
+	} // end for
+
+	draw_map(json_data, csv_data);
+}
+
+
+function draw_map(json_data, csv_data) {
+	
+	// create a quantize scale (function) to sort data values into buckets of color
+	color = d3.scale.quantize()
+			.range(color_range)
+			.domain([d3.min(csv_data, function(d) {return parseFloat(d.total); }), // next minimum value greater than 0
+					d3.max(csv_data, function(d) { return parseFloat(d.total); })
+			]);
+
+	// bind the data and create one path for each geojson feature
+	svg.selectAll("path")
+		.data(json_data.features)
+		.enter()
+		.append("path")
+		.attr("d", path)
+		.attr("fill", calculate_color);
+
+	svg.selectAll("path")
+		.data(json_data.features)
+	  	.on("mouseover", function(d) {
+	    	d3.select(this)
+		  		.transition().duration(500)
+		  		.attr("fill", "orange")
+		  		.attr("stroke-width", 3)
+			d3.select("#state_name").text(d.properties.name)
+			d3.select("#state_total").text(d3.format("$,.2f")(d.properties.total))
+			d3.select("#state_appropriated").text(d3.format("$,.2f")(d.properties.appropriated))
+			d3.select("#state_reimbursable").text(d3.format("$,.2f")(d.properties.reimbursable))
+			d3.select("#state_rank").text(d3.format("i")(d.properties.rank));
+	  	})
+		.on("click", function(d) {
+			tooltip_map.style("visibility", "visible")
+				.style("top", (d3.event.pageY + 10) + "px")
+				.style("left", (d3.event.pageX + 10) + "px")
+				.html(d.properties.name);
+		})
+	  	.on("mouseout", function(d) {
+			d3.select(this)
+				.transition().duration(500)
+				.attr("fill", calculate_color)
+				.attr("stroke-width", 1)
+  				return tooltip_map.style("visibility", "hidden");
+		})
+  		.on("mousemove", function() {
+  			return tooltip_map.style("top", (d3.event.pageY + 10) + "px")
+  							  .style("left", (d3.event.pageX + 10) + "px");
+  		})
+
+	var keys = legend.selectAll("li.key")
+		.data(color.range())
+
+	keys.enter().append("li")
+		.attr("class", "key")
+		.style("border-top-color", String)
+		.text(function(d) {
+			var r = color.invertExtent(d);
+			var format = d3.format("$,.2f");
+			return format(+r[0]) + " - " + format(+r[1]);
+		});
+
+  	paint_map();
+  	make_legend();
+
+} // end draw_map()
+
+
 function calculate_color(d) {
+// function to calculate a color based on the funding data
 
 	var value = d.properties.total;
 
@@ -83,121 +212,26 @@ function calculate_color(d) {
 	}
 }
 
-var get_data = function(){
-	if( map_type == "btn-total"){
-		data_file = "data/2015-usgs-water-science-centers-funding-total.csv";
-	}
-	else if( map_type == "btn-water"){
-		data_file = "data/2015-usgs-water-science-centers-funding-water.csv";
-	}
-	else if( map_type == "btn-ecosystems"){
-		data_file = "data/2015-usgs-water-science-centers-funding-ecosystems.csv";
-	}
-	return data_file;
-};
 
-var process_data = function(){
-	if( map_type == "btn-total"){
-		data_file = "data/2015-usgs-water-science-centers-funding-total.csv";
-	}
-	else if( map_type == "btn-water"){
-		data_file = "data/2015-usgs-water-science-centers-funding-water.csv";
-	}
-	else if( map_type == "btn-ecosystems"){
-		data_file = "data/2015-usgs-water-science-centers-funding-ecosystems.csv";
-	}
+function paint_map() {
+	
+	svg.selectAll("path")
+		.attr("fill", calculate_color);
+}
 
-};
+function make_legend() {
 
-// load the funding data
-d3.csv(data_file, function(funding_data) {
+	legend.selectAll("li.key")
+		.data(color.range())
+		.text(function(d) {
+			var r = color.invertExtent(d);
+			var format = d3.format("$,.2f");
+			return format(+r[0]) + " - " + format(+r[1]);
+		});
+}
 
-	// set the input domain for the color scale
-	color.domain([
-		// d3.min(funding_data, function(d) {	return parseFloat(d.total); }),
-		3875657., // next minimum value greater than 0
-		d3.max(funding_data, function(d) { return parseFloat(d.total); })
-		]);
 
-	// load the data file; note path is relative from index.html
-	d3.json("data/us-states.json", function(error, json) {
-
-		if (error) { return console.error(error) };	
-
-		// merge the funding data and geojson
-		for (var i = 0; i < funding_data.length; i++) {
-
-			// get the state name
-			var funding_data_state = funding_data[i].state;
-
-			// get the data values and convert from string to float
-			var funding_data_value = parseFloat(funding_data[i].total);
-			var appropriated_data_value = parseFloat(funding_data[i].appropriated);
-			var reimbursable_data_value = parseFloat(funding_data[i].reimbursable);
-			var rank_data_value = parseFloat(funding_data[i].rank);
-
-			// find the corresponding state inside the geojson
-			for (var j = 0; j < json.features.length; j++) {
-
-				// get the json state name
-				var json_data_state = json.features[j].properties.name;
-
-				if (funding_data_state === json_data_state) {
-
-					// copy the funding data value into the the json
-					json.features[j].properties.total = funding_data_value;
-					json.features[j].properties.appropriated = appropriated_data_value;
-					json.features[j].properties.reimbursable = reimbursable_data_value;					
-					json.features[j].properties.rank = rank_data_value;					
-
-					// stop looking through the geojson
-					break;
-				}
-			}	
-		}
-		
-		// bind the data and create one path for each geojson feature
-		svg.selectAll("path")
-			.data(json.features)
-			.enter()
-			.append("path")
-			.attr("d", path)
-			.attr("fill", calculate_color);
-
-		svg.selectAll("path")
-			.data(json.features)
-			.on("mouseover", function(d) {
-				d3.select(this)
-					.transition().duration(500)
-					.attr("fill", "orange")
-					.attr("stroke-width", 3)
-				d3.select("#state_name").text(d.properties.name)
-				d3.select("#state_total").text(d3.format("$,.2f")(d.properties.total))
-				d3.select("#state_appropriated").text(d3.format("$,.2f")(d.properties.appropriated))
-				d3.select("#state_reimbursable").text(d3.format("$,.2f")(d.properties.reimbursable))
-				d3.select("#state_rank").text(d3.format("i")(d.properties.rank));
-			})
-			.on("mouseout", function(d) {
-				d3.select(this)
-					.transition().duration(500)
-					.attr("fill", calculate_color)
-					.attr("stroke-width", 1)
-		  		return tooltip.style("visibility", "hidden");
-			})
-		  	.on("mousemove", function() {
-		  		return tooltip.style("top", (event.pageY + 10) + "px").style("left", (event.pageX + 10) + "px");
-		  	})
-		
-		var keys = legend.selectAll("li.key")
-			.data(color.range())
-
-		keys.enter().append("li")
-			.attr("class", "key")
-			.style("border-top-color", String)
-			.text(function(d) {
-				var r = color.invertExtent(d);
-				var format = d3.format("$,.2f");
-				return format(+r[0]) + " - " + format(+r[1]);
-			});
-	});
-});
+// run main
+jQuery(document).ready(function(){
+	init();
+})
