@@ -11,6 +11,20 @@ $("#btn-total").click(function() {
 	$("#btn-water").addClass("btn btn-default");
 	$("#btn-ecosystems").removeClass("btn btn-primary");
 	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
 	csv_file = "data/2015-usgs-water-science-centers-funding-total.csv";
@@ -21,8 +35,22 @@ $("#btn-total").click(function() {
 $("#btn-water").click(function() {
 	$("#btn-total").removeClass("btn btn-primary");
 	$("#btn-total").addClass("btn btn-default");
-	$("#btn-recharge").removeClass("btn btn-primary");
-	$("#btn-recharge").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
 	csv_file = "data/2015-usgs-water-science-centers-funding-water.csv";
@@ -35,9 +63,206 @@ $("#btn-ecosystems").click(function() {
 	$("#btn-total").addClass("btn btn-default");
 	$("#btn-water").removeClass("btn btn-primary");
 	$("#btn-water").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
 	csv_file = "data/2015-usgs-water-science-centers-funding-ecosystems.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+$("#btn-em").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-em.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+$("#btn-hazards").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-hazards.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+$("#btn-clu").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-clu.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+$("#btn-css").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-css.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+$("#btn-eh").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-eh.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+$("#btn-aei").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-misc").removeClass("btn btn-primary");
+	$("#btn-misc").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-aei.csv";
+	load_data();
+	console.log(csv_file);
+});
+
+
+$("#btn-misc").click(function() {
+	$("#btn-total").removeClass("btn btn-primary");
+	$("#btn-total").addClass("btn btn-default");
+	$("#btn-water").removeClass("btn btn-primary");
+	$("#btn-water").addClass("btn btn-default");
+	$("#btn-ecosystems").removeClass("btn btn-primary");
+	$("#btn-ecosystems").addClass("btn btn-default");
+	$("#btn-em").removeClass("btn btn-primary");
+	$("#btn-em").addClass("btn btn-default");
+	$("#btn-hazards").removeClass("btn btn-primary");
+	$("#btn-hazards").addClass("btn btn-default");
+	$("#btn-clu").removeClass("btn btn-primary");
+	$("#btn-clu").addClass("btn btn-default");
+	$("#btn-css").removeClass("btn btn-primary");
+	$("#btn-css").addClass("btn btn-default");
+	$("#btn-eh").removeClass("btn btn-primary");
+	$("#btn-eh").addClass("btn btn-default");
+	$("#btn-aei").removeClass("btn btn-primary");
+	$("#btn-aei").addClass("btn btn-default");
+	$(this).addClass("btn btn-primary");
+	map_type = $(this).attr("id");
+	csv_file = "data/2015-usgs-water-science-centers-funding-misc.csv";
 	load_data();
 	console.log(csv_file);
 });
@@ -130,6 +355,7 @@ function process_data(error, json_data, csv_data) {
 		}	
 	} // end for
 
+	update_table(json_data);
 	draw_map(json_data, csv_data);
 }
 
@@ -217,6 +443,41 @@ function paint_map() {
 	
 	svg.selectAll("path")
 		.attr("fill", calculate_color);
+}
+
+
+function update_table(json_data) {
+
+	var ky_total;
+	var ky_appropriated;
+	var ky_reimbursable;
+	var ky_rank;
+
+	// find Kentucky inside the geojson
+	for (var j = 0; j < json_data.features.length; j++) {
+
+		// get the json state name
+		var json_state = json_data.features[j].properties.name;
+
+		if ("Kentucky" === json_state) {
+
+			// copy the funding data value
+			ky_name = "Kentucky"
+			ky_total = json_data.features[j].properties.total;
+			ky_appropriated = json_data.features[j].properties.appropriated;
+			ky_reimbursable = json_data.features[j].properties.reimbursable;
+			ky_rank = json_data.features[j].properties.rank;
+
+			// stop looking through the geojson
+			break;
+		}
+	}	
+
+	d3.select("#state_name").text(ky_name)
+	d3.select("#state_total").text(d3.format("$,.2f")(ky_total))
+	d3.select("#state_appropriated").text(d3.format("$,.2f")(ky_appropriated))
+	d3.select("#state_reimbursable").text(d3.format("$,.2f")(ky_reimbursable))
+	d3.select("#state_rank").text(d3.format("i")(ky_rank));	
 }
 
 function make_legend() {
