@@ -27,7 +27,7 @@ $("#btn-total").click(function() {
 	$("#btn-misc").addClass("btn btn-default");
 	$(this).addClass("btn btn-primary");
 	map_type = $(this).attr("id");
-	csv_file = "data/2015-usgs-water-science-centers-funding-total.csv";
+	csv_file = "data/2015-usgs-water-science-centers-funding.csv";
 	load_data();
 	console.log(csv_file);
 });
