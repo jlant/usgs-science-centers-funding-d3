@@ -2,7 +2,7 @@
 var width, height, projection, path, svg, color, tooltip_map, legend;
 var color_range = colorbrewer.RdYlBu[10];
 var json_file = "data/us-states.json";
-var csv_file = "data/2015-usgs-water-science-centers-funding-total.csv";
+var csv_file = "data/2015-usgs-water-science-centers-funding.csv";
 
 
 // events
@@ -274,7 +274,6 @@ function init() {
 
 
 function make_map() {
-	console.log("in make_map()")
 	// set width and height of svg element
 	width = 1140;
 	height = 500;
@@ -334,6 +333,15 @@ function process_data(error, json_data, csv_data) {
 		var appropriated = parseFloat(csv_data[i].appropriated);
 		var reimbursable = parseFloat(csv_data[i].reimbursable);
 		var rank = parseFloat(csv_data[i].rank);
+		var water_total = parseFloat(csv_data[i].water_total);
+		var ecosystems_total = parseFloat(csv_data[i].ecosystems_total);
+		var em_total = parseFloat(csv_data[i].em_total);
+		var hazards_total = parseFloat(csv_data[i].hazards_total);
+		var clu_total = parseFloat(csv_data[i].clu_total);
+		var css_total = parseFloat(csv_data[i].css_total);
+		var eh_total = parseFloat(csv_data[i].eh_total);
+		var aei_total = parseFloat(csv_data[i].aei_total);
+		var misc = parseFloat(csv_data[i].misc);
 
 		// find the corresponding state inside the geojson
 		for (var j = 0; j < json_data.features.length; j++) {
@@ -347,7 +355,16 @@ function process_data(error, json_data, csv_data) {
 				json_data.features[j].properties.total = total;
 				json_data.features[j].properties.appropriated = appropriated;
 				json_data.features[j].properties.reimbursable = reimbursable;					
-				json_data.features[j].properties.rank = rank;					
+				json_data.features[j].properties.rank = rank;
+				json_data.features[j].properties.water_total = water_total;
+				json_data.features[j].properties.ecosystems_total = ecosystems_total;
+				json_data.features[j].properties.em_total = em_total;
+				json_data.features[j].properties.hazards_total = hazards_total;
+				json_data.features[j].properties.clu_total = clu_total;
+				json_data.features[j].properties.css_total = css_total;
+				json_data.features[j].properties.eh_total = eh_total;
+				json_data.features[j].properties.aei_total = aei_total;
+				json_data.features[j].properties.misc = misc;					
 
 				// stop looking through the geojson
 				break;
@@ -394,7 +411,19 @@ function draw_map(json_data, csv_data) {
 			tooltip_map.style("visibility", "visible")
 				.style("top", (d3.event.pageY + 10) + "px")
 				.style("left", (d3.event.pageX + 10) + "px")
-				.html(d.properties.name);
+				.html("<small>" + 
+					d.properties.name + " - Mission Area Funding" + "<br>" + 
+					"Water: " + d3.format("$,.2f")(d.properties.water_total) + "<br>" + 
+					"Ecosystems: " + d3.format("$,.2f")(d.properties.ecosystems_total) + "<br>" + 
+					"Energy: " + d3.format("$,.2f")(d.properties.em_total) + "<br>" +
+					"Hazards: " + d3.format("$,.2f")(d.properties.hazards_total) + "<br>" +
+                    "Climate:" + d3.format("$,.2f")(d.properties.clu_total) + "<br>" + 
+                    "Core:" + d3.format("$,.2f")(d.properties.css_total) + "<br>" + 
+                    "Environmental:" + d3.format("$,.2f")(d.properties.eh_total) + "<br>" + 
+                    "Administration:" + d3.format("$,.2f")(d.properties.aei_total) + "<br>" + 
+                    "Misc:" + d3.format("$,.2f")(d.properties.misc) + 
+					"</small>"
+				);
 		})
 	  	.on("mouseout", function(d) {
 			d3.select(this)

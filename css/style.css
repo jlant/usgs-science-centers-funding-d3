@@ -7,16 +7,16 @@ svg {
     width: 110px;
 }
 
-.tooltip {
+.tooltip_map {
 	position: absolute;
-/*	background: black;
+	background: black;
 	padding: 4px;
 	font: 18px sans-serif;
 	color: white;
 	opacity: 0.9;
 	border: 0px;
-	border-radius: 4px;*/
-	visibility: hidden;
+	border-radius: 4px;
+	visibility: visible;
 }
 
 .title-logo {
